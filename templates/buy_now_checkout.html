@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+<section class="section-content padding-y bg">
+<div class="container">
+
+			
+
+<!-- ============================ COMPONENT 1 ================================= -->
+<div class="col-md-12">
+ <a href="{% url 'save_address_checkout' %}" class=" btn btn-sm btn btn-success"><i class="fa fa-plus"></i></a>
+<h5>Select address</h5>
+        <div class="row">
+            {% for add in addresses %}
+            <div class="col-md-3">
+                <div class="card {% if add.status %}border-secondary shadow{% endif %} address{{add.id}} address">
+                    <div class="card-body">
+                    <a href="{% url 'delete_address' add.id %}"> <i class="fa fa-trash float-right text-danger"></i></a>
+                    {{add.first_name}}
+                 
+                    {{add.last_name}}
+                    <br>
+                    {{add.address_line_1}}
+                    <br>
+                    {{add.address_line_2}}
+                    <br>
+                    {{add.phone}}
+                    <br>
+                    {{add.email}}
+                    <br>
+                    {{add.country}}
+                    <br>
+                    {{add.state}}
+                    <br>
+                    
+                    {{add.city}}
+                </div>
+                
+                    {% if add.status %}
+                 
+                    <div class="card-footer">
+                    <i class="fa fa-check-circle text-success check{{add.id}} check"></i>
+                    <button onClick="a('{{add.first_name}}','{{add.last_name}}','{{add.address_line_1}}','{{add.address_line_2}}','{{add.phone}}','{{add.email}}','{{add.country}}','{{add.state}}','{{add.city}}')" style="display: none;" data-address="{{add.id}}" class="btn btn-sm btn-info activate-address1 btn{{add.id}} actbtn">Select</button>
+                    </div>
+                    {% else %}
+                    <div class="card-footer footer{{add.id}}">
+                        <i style="display: none;" class="fa fa-check-circle text-success check{{add.id}} check"></i>
+                    <button onClick="a('{{add.first_name}}','{{add.last_name}}','{{add.address_line_1}}','{{add.address_line_2}}','{{add.phone}}','{{add.email}}','{{add.country}}','{{add.state}}','{{add.city}}')" data-address="{{add.id}}" class="btn btn-sm btn-info activate-address1 btn{{add.id}} actbtn" >Select</button>
+                    </div>
+                    {% endif %}
+                   
+                </div>
+            </div>
+            {% endfor %}
+            
+        </div>
+       
+    </div>
+
+
+
+<div class="row">
+	<aside class="col-lg-6">
+<div class="card">
+  <div class="card-body">
+  <h4 class="card-title mb-4">Billing Address </h4>
+  <form action="{% url 'buynow_place_order' %}" method="POST">
+      {% csrf_token %}
+      <div class="form-row">
+          <div class="col from-group"> 
+              <label for="">First Name </label>
+              <input type="text" id="first_name" name="first_name" class="form-control" value="{{selectaddress.first_name}}" required>
+          </div>
+          <div class="col from-group"> 
+            <label for="">Last Name </label>
+            <input type="text" id="last_name" name="last_name" class="form-control" value="{{selectaddress.last_name}}" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="col from-group"> 
+            <label for="">Email </label>
+            <input type="email" id="email" name="email" class="form-control" value="{{selectaddress.email}}" required>
+        </div>
+        <div class="col from-group"> 
+          <label for="">Phone Number </label>
+          <input type="text" id="phone" name="phone" class="form-control" value="{{selectaddress.phone}}" required>
+      </div>
+    </div>
+    <div class="form-row">
+        <div class="col from-group"> 
+            <label for="">Address Line1</label>
+            <input type="text" id="address_line_1" name="address_line_1" class="form-control" value="{{selectaddress.address_line_1}}" required>
+        </div>
+        <div class="col from-group"> 
+          <label for="">Address Line2 </label>
+          <input type="text" id="address_line_2" name="address_line_2" class="form-control" value="{{selectaddress.address_line_2}}" required>
+      </div>
+    </div>
+
+    <div class="form-row">
+        <div class="col from-group"> 
+            <label for="">City</label>
+            <input type="text" id="city" name="city" class="form-control" value="{{selectaddress.city}}" required>
+        </div>
+        <div class="col from-group"> 
+          <label for="">State </label>
+          <input type="text" id="state" name="state" class="form-control" value="{{selectaddress.state}}" required>
+      </div>
+      <div class="col from-group"> 
+        <label for="">Country </label>
+        <input type="text" id="country" name="country" class="form-control" value="{{selectaddress.country}}" required>
+    </div>
+    </div>
+    <div class="form-row">
+        <label for="">
+            Order Note
+        </label>
+        <textarea name="order_note" id=""  rows="2" class="form-control">
+
+        </textarea>
+    </div>
+
+  </div>
+</div> <!-- card.// -->
+
+
+ 
+
+	</aside> <!-- col.// -->
+	<aside class="col-lg-6">
+
+		<div class="card">
+		<div class="card-body">
+			   
+<table class="table table-borderless table-shopping-cart">
+<thead class="text-muted">
+<tr class="small text-uppercase">
+  <th scope="col">Product</th>
+  <th scope="col" width="120">Quantity</th>
+  <th scope="col" width="120">Price</th>
+ 
+</tr>
+</thead>
+<tbody>
+
+	{% for buynow_item in buynow_items %}
+<tr>
+	<td>
+		<figure class="itemside align-items-center">
+			<div class="aside"><img src="{{ buynow_item.product.product_image1.url }}" class="img-sm"></div>
+			<figcaption class="info">
+				<a href="{{ buynow_item.product_.get_url }}" class="title text-dark">{{ buynow_item.product.product_name }}</a>
+				<p class="small text-muted small"><br>
+        {% if buynow_item.variations.all %}
+				{% for item in cart_item.variations.all %}
+				{{ item.variation_category | capfirst }}  :{{ item.variation_value | capfirst }}<br>
+				{% endfor %}
+				{% endif %}
+        </p>
+			</figcaption>
+		</figure>
+	</td>
+	   <td>
+           <label for="">
+               {{buynow_item.quantity}}
+           </label>
+       </td>
+	<td> 
+		<div class="price-wrap"> 
+			<br>
+			<var class="price">₹{{buynow_item.sub_total}}</var> 
+			<small class="text-muted"> {{buynow_item.product.price}}</small>  
+		</div> <!-- price-wrap .// -->
+	</td>
+ 
+</tr>
+
+{% endfor %}
+</tbody>
+  
+</table>
+
+
+
+			
+      <button type="submit" name="submit"  class="btn btn-primary btn-block"> Place Order </button>
+			<a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
+   </form>
+
+	</div> <!-- card-body.// -->
+
+</div> <!-- card.// -->
+
+<div class="row">
+        <div class="col-md-12 col-sm-6 col-xs-12">
+            <div class="sccb-discount shopping-cart-content-box">
+              <h4> Apply coupon</h4>
+                <p>Coupon code: <small id="promo"></small></p>
+                <p>Discount: <span id="discount" class="text-success"></span></p>
+                
+                Amount after applying coupon<br><strong class="order-total clearfix" id="grandtotal">{% if grand_total %} Grand Total: Rs{{grand_total}} {% else %} Rs{{request.session.grand_total}} {% endif %}</strong>
+                                          
+                <span class="sccb-shipping-title">Enter your coupon</span>
+                <div class="sccb-discount-subscribe-box clearfix">
+                    <input type="text" class="form-control" placeholder="Promo code" id="coupon"/>
+                        <button type="button" id="apply" value="{{grand_total}}" onclick="couponCheck()" class="btn btn-secondary">
+                          Redeem
+                        </button>
+                </div>
+            </div>
+          </div>
+    </div>
+
+
+</aside> <!-- col.// -->
+
+
+</div> <!-- row.// -->
+
+<!-- ============================ COMPONENT 1 END .// ================================= -->
+
+</div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+<script>
+  function a(first_name,last_name,email,phone,address_line_1,address_line_2,city,state,country){
+    document.getElementById('first_name').value =first_name
+    document.getElementById('last_name').value =last_name
+    document.getElementById('email').value =email
+    document.getElementById('phone').value =phone
+    document.getElementById('address_line_1').value =address_line_1
+    document.getElementById('address_line_2').value =address_line_2
+    document.getElementById('city').value =city
+    document.getElementById('state').value =state
+    document.getElementById('country').value =country
+       
+  }
+</script>
+
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+  crossorigin="anonymous"
+></script>
+<script>
+  window.jQuery ||
+    document.write(
+      '<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>'
+    );
+</script>
+<script src="{%static 'checkout/css/popper.min.js'%}"></script>
+<script src="{%static 'checkout/js/bootstrap.min.js'%}"></script>
+<script src="{%static 'checkout/js/holder.min.js'%}"></script>
+<script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function () {
+    "use strict";
+
+    window.addEventListener(
+      "load",
+      function () {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName("needs-validation");
+
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      },
+      false
+    );
+  })();
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+<script>
+  $(document).ready(function () {
+    console.clear();
+    document.getElementById("promo").textContent = "";
+  });
+
+   //Activate selected address
+$(document).ready(function() {
+    $(document).on('click', '.activate-address1', function(event){
+        console.log(event);
+        var _aId=$(this).attr('data-address');
+        var _vm=$(this);
+        //ajax
+        $.ajax({
+            url:'/activate-address',
+            data:{
+                'id':_aId,
+            },
+            dataType:'json',
+            
+            success:function(res){
+                if(res.bool==true){
+                    $(".address").removeClass('shadow boarder-secondary');
+                    $(".address"+_aId).addClass('shadow boarder-secondary');
+                    $(".check").hide();
+                    $(".actbtn").show();
+               
+                    $(".check"+_aId).show();
+                    $(".btn"+_aId).hide();
+                    
+                    
+                   
+                }
+            }       
+        });
+     
+
+      });
+});
+
+
+
+  function couponCheck() {
+    var coupon = $("#coupon").val();
+    var total = $("#apply").val();
+
+    $.ajax({
+      url: "{%url 'checkCoupon'%}",
+      type: "POST",
+      data: {
+        coupon: coupon,
+        total: total,
+        csrfmiddlewaretoken: "{{csrf_token}}",
+      },
+      dataType: "json",
+      success: function (json) {
+        if (json.flag == 1) {
+          swal("Oops", "Coupon is already used", "error");
+        } else if (json.flag == 0) {
+          swal("Oops", "Coupon is Not Active", "error");
+        } else {
+          swal({
+            title: "Congratulation!",
+            text: "You Got A Coupon!",
+            icon: "success",
+            button: "Aww yess!",
+          });
+          console.log(json.discount_price)
+          document.getElementById("grandtotal").textContent = "Grand Total: Rs." + json.total;
+          document.getElementById("discount").textContent =
+            "-" + "Rs." + json.discount_price;
+          document.getElementById("promo").textContent = $("#coupon").val();
+        }
+      },
+    });
+  }
+</script>
+
+{% endblock %} 

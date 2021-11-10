@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+{% include 'includes/alerts.html' %}
+<div class="container">
+	<div class="row">
+	{% include 'includes/user_sidebar.html' %}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Your Order History</strong>
+			
+		</header>
+		<div class="card-body">
+			<div class="row"> 
+				<div class="col-md-12">
+                {% if order_items %}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col">Order#</th>
+                        <th scope="col">Billing Name</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Order Total</th>
+                        <th scope="col">Order Status</th>
+                       <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in order_items   %}
+                    <tr>
+                      
+                       <th scope="row"> 
+                       {% if order.status == 'Cancelled' %}
+                        <a href="#">{{ order.order.order_number }} </a>
+                       {% else %}
+                        <a href="{% url 'order_detail' order.order.order_number %}">{{ order.order.order_number }} </a>
+                        {% endif %}
+                        </th>
+                        <td>{{order.order.first_name}}</td>
+                        <td>{{order.order.phone}}</td>
+                        <td class="text-primary">
+
+                              {% if order.product.product_image1 %}<img src="{{order.product.product_image1.url}}" style="height: 70px;width:70px;">{% endif %}
+
+                        </td>
+                        <td>{{order.order.order_total}}</td>
+                        
+                        <td class="text-success">{{order.status}}</td> 
+                        <td>
+                        
+                        {% if order.status == 'Placed' %}
+                        <a onclick="cancel_order('{{order.id}}')" data-toggle="modal" data-target="#exampleModal" class="btn btn-secondary text-light">Cancel</a>
+                        {% elif order.status == 'Delivered' %}
+                        <a href="{% url 'order_return' order.id %}" class="btn btn-secondary text-white">Return</a>
+                        {% else %}
+                        
+                        {% endif %}
+                       </td>
+                    </tr>
+                    {% endfor %}
+                     </tbody>
+                </table>
+                {% else %}
+                <h3>No orders found</h3>
+                {% endif %}
+				</div>
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+		
+		</article> <!-- order-group.// --> 
+	</main>
+</div> <!-- row.// -->
+</div>
+
+ <!-- Modal Start -->
+                          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Cancel</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <p>Are you sure you want to cancel this item?</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <input type="text" name="" style="display: none;" id="remove_item1">
+                               
+                                <a href="" id="modalYes" ><button type="button" class="btn btn-primary">Yes</button></a>
+                              </div>
+                              </div>
+                            </div>
+                            </div>
+		                <!-- Modal end -->
+
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+  <!--Modal Script Start-->
+<script>
+    function cancel_order(data) {
+      document.getElementById('modalYes').href = '/orders/order_cancel/'+data
+    }
+</script>
+<!--Modal Script End-->
+
+
+</body>
+</html>
+{% endblock %}
+

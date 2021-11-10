@@ -1,0 +1,14 @@
+
+.small-image{
+    width: 70px;
+    height: 70px;
+
+}
+li{
+    list-style-type: none;
+}
+
+.zoom-image{
+    width: 350px;
+    height: 450px;
+}

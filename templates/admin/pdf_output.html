@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @page {
+            size:"A4";
+            margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+        
+        @top-center {
+            content:"MYGLAM";
+        }
+        @bottom-right {
+            content: "Page " counter(page) " of " counter(pages);
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="intro-banner-wrap">
+        <img src="/home/fasna/Desktop/myglam/myglam/myglamproject/static/images/logo2.png" class="img-fluid rounded">
+    </div>
+    
+    <h2>Orders List</h2>
+  <div class="table">
+    <table>
+        <thead class="thead">
+            <tr>
+                <th> Sl No</th>
+                <th> Id</th>
+                <th> Date</th>
+                <th> Quantity</th>
+                <th> Status</th>
+                <th> Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td> {{ forloop.counter }} </td>
+                <td> {{order.id}}</td>
+                <td> {{order.created_at}}</td>
+                <td> {{order.quantity}}</td>
+                <td> {{order.status}}</td>
+                <td> {{order.product_price}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>  
+    </div>
+</body>
+</html>

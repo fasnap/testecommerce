@@ -1,0 +1,309 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+  <style>
+    .not-visible {
+      display: none;
+  }
+  </style>
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg">
+{% include 'includes/alerts.html' %}
+<div class="container">
+	<div class="row">
+	{% include 'includes/user_sidebar.html' %}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Edit Your Profile</strong>
+			
+		</header>
+		<div class="card-body">
+			<div class="text-right">
+			{% if userprofile.profile_picture %}
+				<img src="{{userprofile.profile_picture.url}}" alt="Profile Picture" width="100" style="border-radius:50px;" >
+			{% endif %}
+			</div>
+			<div class="row"> 
+			<div class="col-md-12">
+                <form action="{% url 'edit_profile' %}" method="POST" enctype="multipart/form-data" id="post-form">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+						<label>First Name</label>
+						{{user_form.first_name}}
+                    </div>
+					 <div class="form-group col-md-6">
+						<label>Last Name</label>
+						{{user_form.last_name}}
+                    </div>
+				</div>
+				 <div class="form-row">
+                    <div class="form-group col-md-6">
+						<label>Phone Number</label>
+						{{user_form.phonenumber}}
+                    </div>
+					
+						<div class="form-group col-md-6">
+                         
+                                <label for="lname">Profile Picture</label>
+								<img src="" id="profile_picture" style="width:100px;">
+                              <div class="col-75">
+                                {{profile_form.profile_picture}}
+                              </div>
+                        </div>
+                 
+                       
+				</div>
+				 <div class="form-group">
+					<label>Address Line1</label>
+					{{profile_form.address_line_1}}
+                </div>
+				<div class="form-group">
+					<label>Address Line2</label>
+					{{profile_form.address_line_2}}
+            	</div>
+				<div class="form-row">
+                    <div class="form-group col-md-4">
+						<label>City</label>
+						{{profile_form.city}}
+                    </div>
+					 <div class="form-group col-md-4">
+						<label>State</label>
+						{{profile_form.state}}
+                    </div>
+					 <div class="form-group col-md-4">
+						<label>Country</label>
+						{{profile_form.country}}
+                    </div>
+				</div>
+							<div class="form-group">
+                            <button style="margin-top: 10px; color: white; border-color: white;"
+                                            class="btn btn-primary " id="confirm-btn"
+                                            type="submit">SUBMIT</button> 
+							</div>
+							<div class="form-row">
+							<div class="form-group">
+							<div style="width: 400px; height: 500px;"  id="image-box" class="image-container m-auto not-visible"></div>
+							<button class="btn btn-outline-info m-auto not-visible" id="crop-btn"style="margin-top: 10px" type="button">Crop</button>
+												 
+							</div>
+							</div>
+
+
+                </form>
+				</div>
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+		
+		</article> <!-- order-group.// --> 
+	</main>
+</div> <!-- row.// -->
+</div>
+
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+<script>
+
+
+            // image-box is the id of the div element that will store our cropping image preview
+            const imagebox2 = document.getElementById('image-box')
+            // crop-btn is the id of button that will trigger the event of change original file with cropped file.
+            const crop_btn2 = document.getElementById('crop-btn')
+            // id_image is the id of the input tag where we will upload the image
+            const input2 = document.getElementById('id_profile_picture')
+
+            var allowedExtensions =
+                /(\.jpg|\.jpeg|\.png|\.gif|\.webp)$/i;
+
+            var filePath2 = input2.value;
+
+            // When user uploads the image this event will get triggered
+            input2.addEventListener('change', () => {
+                if (!allowedExtensions.exec(input2.value)) {
+                    alert('Invalid file type');
+                    input2.value = '';
+                }
+                else {
+                    // Getting image file object from the input variable
+                    const img_data2 = input2.files[0]
+                    // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
+                    // The new object URL represents the specified File object or Blob object.
+                    const url2 = URL.createObjectURL(img_data2)
+
+                    // Creating a image tag inside imagebox which will hold the cropping view image(uploaded file) to it using the url created before.
+                    imagebox2.innerHTML = `<img src="${url2}" id="image" style="width:100%;">`
+
+                    // Storing that cropping view image in a variable
+                    const profile_picture = document.getElementById('image')
+
+                    // Displaying the image box
+                    document.getElementById('image-box').style.display = 'block'
+                    // Displaying the Crop buttton
+                    document.getElementById('crop-btn').style.display = 'block'
+                    // Hiding the Post button
+                    document.getElementById('confirm-btn').style.display = 'none'
+
+                    // Creating a croper object with the cropping view image
+                    // The new Cropper() method will do all the magic and diplay the cropping view and adding cropping functionality on the website
+                    // For more settings, check out their official documentation at https://github.com/fengyuanchen/cropperjs
+                    const cropper2 = new Cropper(profile_picture, {
+                        autoCropArea: 1,
+                        viewMode: 1,
+                        scalable: false,
+                        zoomable: false,
+                        movable: false,
+                        aspectRatio: 25 / 25,
+                        //preview: '.preview',
+                        minCropBoxWidth: 200,
+                        minCropBoxHeight: 200,
+                    })
+
+                    // When crop button is clicked this event will get triggered
+                    crop_btn2.addEventListener('click', () => {
+                        // This method coverts the selected cropped image on the cropper canvas into a blob object
+                        cropper2.getCroppedCanvas().toBlob((blob) => {
+
+                            // Gets the original image data
+                            let fileInputElement2 = document.getElementById('id_profile_picture');
+                            // Make a new cropped image file using that blob object, image_data.name will make the new file name same as original image
+                            let file2 = new File([blob], img_data2.name, { type: "image/*", lastModified: new Date().getTime() });
+                            // Create a new container
+                            let container2 = new DataTransfer();
+                            // Add the cropped image file to the container
+                            container2.items.add(file2);
+                            // Replace the original image file with the new cropped image file
+              fileInputElement2.files = container2.files;
+              let img = container2.files[0]
+              const url = URL.createObjectURL(img)
+              document.getElementById('profile_picture').src = url
+
+                            // Hide the cropper box
+                            document.getElementById('image-box').style.display = 'none'
+                            // Hide the crop button
+                            document.getElementById('crop-btn').style.display = 'none'
+                            // Display the Post button
+                            document.getElementById('confirm-btn').style.display = 'block'
+
+                        });
+                    });
+                }
+      });
+     
+	</script>
+
+        
+        
+<script>    
+    document.forms[1].setAttribute("enctype","multipart/form-data")
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <!-- <script src="{% static 'assets/js/script.js' %}"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js" > </script>
+    <script src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/additional-methods.js"></script>
+<script>
+ 
+  //ajax call
+  
+  
+  $(document).ready(function (e) {
+    jQuery.validator.addMethod("noSpace", function(value, element) { 
+      return value.indexOf(" ") < 0 && value != ""; 
+    }, "No space please and don't leave it empty");
+        $("#post-form").validate({
+            rules:{
+                first_name:{
+                    required:true,
+                    minlength:3,
+                    maxlength:10,
+                    lettersonly: true,
+                    noSpace: true,
+                },
+                last_name:{
+                      
+                    required:true,
+                    minlength:1,
+                    maxlength:10,
+                    lettersonly: true,
+                    noSpace: true,
+                },
+                password1:{
+  
+                    required:true,
+                    minlength:2,
+                   
+                    noSpace: true,
+                    
+                },
+                 password2:{
+  
+                    required:true,
+                    minlength:2,
+               
+                    noSpace: true,
+                },
+				phonenumber:{
+					maxlength:10,
+					minlength:10,
+					numberonly:true,
+					required:true,
+                  
+				},
+                address_line_1:{
+                    required:true,
+                    minlength:4,
+                },
+                address_line_2:{
+                    required:true,
+                    minlength:4,
+                },
+                city:{
+                      
+                    required:true,
+                    minlength:2,
+                    
+                    lettersonly: true,
+                    noSpace: true,
+                },
+                state:{
+                      
+                    required:true,
+                    minlength:2,
+                 
+                    lettersonly: true,
+                    noSpace: true,
+                },
+                country:{
+                    required: true,
+                    pattern: /^[a-zA-Z]+$/
+                    minlength:2,
+                    lettersonly: true,
+                    noSpace: true,
+                },
+               
+            },
+            messages: {
+                country: {
+                    required: "Enter Country name",
+                    pattern: "Enter Correct Country name",
+                    }
+                }
+            
+        })
+  
+    })
+
+</script>
+
+
+
+</body>
+</html>
+{% endblock %}

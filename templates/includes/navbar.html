@@ -1,0 +1,111 @@
+{% load static %}
+<header class="section-header">
+<nav class="navbar p-md-0 navbar-expand-sm navbar-light" style="background-color: #cc8282;">
+<div class="container justify-content-between">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop4" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse text-white" id="navbarTop4">
+    <ul class="navbar-nav mr-auto text-white">
+	<li class="nav-item dropdown ">
+		 	<a href="{% url 'home' %}" class="nav-link text-white "> <i class="fa fa-home"></i> Home </a>
+		    
+		</li>
+		
+                            
+    	<li class="nav-item dropdown">
+		 	<a href="mailto:fasnapkdy@gmail.com" class="nav-link text-white"> <i class="fa fa-envelope text-white"></i> Email </a>
+		    
+		</li>
+			<li class="nav-item dropdown">
+		 	<a href="https://www.linkedin.com/in/fasna-p-96b517191/" class="nav-link text-white"> <i class="fa fa-linkedin"style="color:white"></i>  </a>
+		    
+		</li>
+		
+
+		
+    </ul>
+	<div class="col-2 order-2 order-lg-3">
+		<div style="    margin-bottom: 0 !important;" class="d-flex justify-content-end mb-3 mb-lg-0">
+			<a href="{% url 'user_dashboard' %}"><div class="icon icon-sms rounded-circles borders " style="color:white;"><i style="font-size: 20px;" class="fa fa-user" ></i></div></a>
+			<a href="{% url 'cart' %}" class="widget-header1 pl-3 ml-3"  style="color:white;">
+				
+				<div class="icon icon-sms rounded-circles borders" ><i style="font-size: 20px;" class="fa fa-shopping-cart"></i></div></a>
+				<span class="badge badge-pill badge-light notify" style="background-color: rgb(187, 92, 92);">{{cart_count}}</span>
+			</a>
+			
+		</div> <!-- widgets-wrap.// -->
+	
+	</div> <!-- col.// -->
+    	<div class="widget-header">
+		
+					
+						 {% if user.is_authenticated %}
+						 <small class="title text-muted"><h6 style="color:rgb(49, 5, 5);" class="text-white">Welcome {{user.first_name}}</h6></small>
+						 <a href="{% url 'logout' %}" class="text-white"> Logout</a>
+							
+							{% else %}
+							<a href="{% url 'user_login' %}" class="text-white">Sign in</a> <span class="dark-transp"> | </span>
+						
+							<a href="{% url 'register' %}" class="text-white"> Register</a>
+							{% endif %}
+
+						</div>
+					</div>
+  </div> <!-- navbar-collapse .// -->
+</div> <!-- container //  -->
+</nav>
+
+<section class="header-main">
+<div class="container">
+<div class="row align-items-center">
+	<div class="">
+		<a href="{% url 'home' %}" class="brand-wrap">
+			<img class="logo" src="{% static './images/logo2.png' %}">
+		</a> <!-- brand-wrap.// -->
+	</div>
+	<div class=" flex-grow-0">
+		<div class="category-wrap dropdown d-inline-block float-right">
+			<button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"> 
+				<i class="fa fa-bars"><a href="{% url 'home' %}" style="color:rgb(116, 36, 49);" >All category </a></i>
+			</button>
+		
+			<div class="dropdown-menu">
+				<a class="dropdown-item" href="{% url 'store' %}">All Products</a>
+			{% for category in links %}
+				<a class="dropdown-item" href="{{category.get_url}}">{{category.category_name}}</a>
+				
+				
+			{% endfor %}
+
+			
+			
+			</div>
+			
+		</div>  <!-- category-wrap.// -->
+	</div> <!-- col.// -->
+	<div class="ml-2">
+	<a href="{% url 'store' %}" class="btn btn-outline-secondary" style="color: white; " >Store</a>
+	</div>
+	<div class="">
+		
+		<form action="{% url 'search' %}" class="search ml-2" method="GET">
+			<div class="input-group w-60 input-group-append">
+			    <input type="text" class="form-control" placeholder="Search" name='keyword'>
+			  
+			      <button class="btn btn-light" type="submit">
+			        <i class="fa fa-search"></i>
+				  </button>
+			   
+		    </div>
+		</form> <!-- search-wrap .end// -->
+	</div> <!-- col.// -->
+	
+</div> <!-- row.// -->
+	</div> <!-- container.// -->
+</section> <!-- header-main .// -->
+
+
+
+
+</header> <!-- section-header.// -->

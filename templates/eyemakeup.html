@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- ========================= SECTION MAIN ========================= -->
+
+<section class="section-intro padding-y-sm">
+<div class="container">
+
+<div class="intro-banner-wrap">
+	<img src="{% static 'images/bannes/1.jpg' %}" class="img-fluid rounded">
+</div>
+
+</div> <!-- container //  -->
+</section>
+<!-- ========================= SECTION MAIN END// ========================= -->
+
+<!-- ========================= SECTION  ========================= -->
+<section class="section-name padding-y-sm">
+<div class="container">
+
+	
+
+
+	<div class="row">
+	{% for product in products %}
+		<div class="col-md-3">
+			<div class="card card-product-grid"style="text-align: center;">
+				<a href="{% url 'productdetail' product.id %}" class="img-wrap"> <img src="{{product.product_image1.url}}"> </a>
+				<figcaption class="info-wrap">
+				<a href="{% url 'productdetail' product.id %}" class="title" >{{product.product_name}}</a>
+					<div class="price mt-1">₹{{product.price}}</div> <!-- price-wrap.// -->
+					<div class="action">
+						<a href="view_cartc112.html?quick=1&amp;item_id=4&amp;cat_id=0" class="add-to-cart btn btn-primary btn-default">
+						<span class="buyitlink-text" aria-label="buy link text">Add To Cart</span>
+						<span class="ajaxcart-loader icon-spin2 animate-spin"></span>
+						<span class="ajaxcart-added icon-ok"></span>
+						</a>
+						<a href="view_cartc112.html?quick=1&amp;item_id=4&amp;cat_id=0" class="add-to-cart btn btn-success btn-default">
+							<span class="buyitlink-text" aria-label="buy link text">Buy Now</span>
+							<span class="ajaxcart-loader icon-spin2 animate-spin"></span>
+							<span class="ajaxcart-added icon-ok"></span>
+							</a>
+							
+						</div>
+					
+						
+				</figcaption>
+			</div>
+		</div> <!-- col.// -->
+		{% endfor %}
+	</div> <!-- row.// -->
+</div><!-- container // -->
+</section>
+<!-- ========================= SECTION  END// ========================= -->
+
+{% endblock %}

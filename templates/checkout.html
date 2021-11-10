@@ -1,0 +1,432 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+<section class="section-content padding-y bg">
+<div class="container">
+
+			
+
+<!-- ============================ COMPONENT 1 ================================= -->
+<div class="col-md-12">
+ <a href="{% url 'save_address_checkout' %}" class=" btn btn-sm btn btn-success"><i class="fa fa-plus"></i></a>
+<h5>Select address</h5>
+        <div class="row">
+            {% for add in address %}
+            <div class="col-md-3">
+                <div class="card {% if add.status %}border-secondary shadow{% endif %} address{{add.id}} address">
+                    <div class="card-body">
+                    <a href="{% url 'delete_address' add.id %}"> <i class="fa fa-trash float-right text-danger"></i></a>
+                    {{add.first_name}}
+                 
+                    {{add.last_name}}
+                    <br>
+                    {{add.address_line_1}}
+                    <br>
+                    {{add.address_line_2}}
+                    <br>
+                    {{add.phone}}
+                    <br>
+                    {{add.email}}
+                    <br>
+                    {{add.country}}
+                    <br>
+                    {{add.state}}
+                    <br>
+                    
+                    {{add.city}}
+                </div>
+                
+                    {% if add.status %}
+                 
+                    <div class="card-footer">
+                    <i class="fa fa-check-circle text-success check{{add.id}} check"></i>
+                    <button onClick="a('{{add.first_name}}','{{add.last_name}}','{{add.address_line_1}}','{{add.address_line_2}}','{{add.phone}}','{{add.email}}','{{add.country}}','{{add.state}}','{{add.city}}')" style="display: none;" data-address="{{add.id}}" class="btn btn-sm btn-info activate-address btn{{add.id}} actbtn">Select</button>
+                    </div>
+                    {% else %}
+                    <div class="card-footer footer{{add.id}}">
+                        <i style="display: none;" class="fa fa-check-circle text-success check{{add.id}} check"></i>
+                    <button onClick="a('{{add.first_name}}','{{add.last_name}}','{{add.address_line_1}}','{{add.address_line_2}}','{{add.phone}}','{{add.email}}','{{add.country}}','{{add.state}}','{{add.city}}')" data-address="{{add.id}}" class="btn btn-sm btn-info activate-address btn{{add.id}} actbtn" >Select</button>
+                    </div>
+                    {% endif %}
+                   
+                </div>
+            </div>
+            {% endfor %}
+            
+        </div>
+       
+    </div>
+
+
+
+<div class="row">
+	<aside class="col-lg-6">
+<div class="card">
+  <div class="card-body">
+  <h4 class="card-title mb-4">Billing Address </h4>
+  <form action="{% url 'place_order' %}" method="POST" id="post-form">
+      {% csrf_token %}
+      <div class="form-row">
+          <div class="col from-group"> 
+              <label for="">First Name </label>
+              <input type="text" id="first_name" name="first_name" class="form-control" value="{{selectaddress.first_name}}" required>
+          </div>
+          <div class="col from-group"> 
+            <label for="">Last Name </label>
+            <input type="text" id="last_name" name="last_name" class="form-control" value="{{selectaddress.last_name}}" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="col from-group"> 
+            <label for="">Email </label>
+            <input type="email" id="email" name="email" class="form-control" value="{{selectaddress.email}}" required>
+        </div>
+        <div class="col from-group"> 
+          <label for="">Phone Number </label>
+          <input type="text" id="phone" name="phone" class="form-control" value="{{selectaddress.phone}}" required>
+      </div>
+    </div>
+    <div class="form-row">
+        <div class="col from-group"> 
+            <label for="">Address Line1</label>
+            <input type="text" id="address_line_1" name="address_line_1" class="form-control" value="{{selectaddress.address_line_1}}" required>
+        </div>
+        <div class="col from-group"> 
+          <label for="">Address Line2 </label>
+          <input type="text" id="address_line_2" name="address_line_2" class="form-control" value="{{selectaddress.address_line_2}}" required>
+      </div>
+    </div>
+
+    <div class="form-row">
+        <div class="col from-group"> 
+            <label for="">City</label>
+            <input type="text" id="city" name="city" class="form-control" value="{{selectaddress.city}}" required>
+        </div>
+        <div class="col from-group"> 
+          <label for="">State </label>
+          <input type="text" id="state" name="state" class="form-control" value="{{selectaddress.state}}" required>
+      </div>
+      <div class="col from-group"> 
+        <label for="">Country </label>
+        <input type="text" id="country" name="country" class="form-control" value="{{selectaddress.country}}" required>
+    </div>
+    </div>
+    <div class="form-row">
+        <label for="">
+            Order Note
+        </label>
+        <textarea name="order_note" id=""  rows="2" class="form-control">
+
+        </textarea>
+    </div>
+
+  </div>
+</div> <!-- card.// -->
+</aside> <!-- col.// -->
+  
+	<aside class="col-lg-6">
+<div class="card">
+<div class="card-body">
+<div class="row">
+	<div class="col-md-12 col-sm-6 col-xs-12">
+            <div class="sccb-discount shopping-cart-content-box ">
+              <h4 class="d-flex justify-content-center"> Apply coupon</h4>
+                 
+                <p class="d-flex justify-content-center" >Coupon code: <small id="promo"></small></p>
+                <p class="d-flex justify-content-center">Discount: <span id="discount" class="text-success"></span></p>
+                
+               <p class="d-flex justify-content-center">Amount after applying coupon</p><br><strong class="d-flex justify-content-center order-total clearfix" id="grandtotal">{% if grand_total %} Grand Total: Rs{{grand_total}} {% else %} Rs{{request.session.grand_total}} {% endif %}</strong>
+               
+
+                <span class="sccb-shipping-title d-flex justify-content-center">Enter your coupon</span>
+                <div class="sccb-discount-subscribe-box clearfi">
+                    <input type="text" class="form-control " placeholder="Promo code" id="coupon"/>
+                    <div class="pt-2 d-flex justify-content-center">
+                        <button type="button" id="apply" value="{{grand_total}}" onclick="couponCheck()" class="btn btn-secondary" style="color: white; background-color: rgb(77, 30, 37);">
+                          Redeem
+                        </button>
+                        </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        </div>
+  </div>
+<div class="pt-3">
+<div class="card">
+    
+<div class="card-body">
+			   
+<table class="table table-borderless table-shopping-cart">
+<thead class="text-muted">
+<tr class="small text-uppercase">
+  <th scope="col">Product</th>
+  <th scope="col" width="120">Quantity</th>
+  <th scope="col" width="120">Price</th>
+ 
+</tr>
+</thead>
+<tbody>
+
+	{% for cart_item in cart_items %}
+<tr>
+	<td>
+		<figure class="itemside align-items-center">
+			<div class="aside"><img src="{{ cart_item.product.product_image1.url }}" class="img-sm"></div>
+			<figcaption class="info">
+				<a href="{{ cart_item.product_.get_url }}" class="title text-dark">{{ cart_item.product.product_name }}</a>
+				<p class="small text-muted small"><br>
+        {% if cart_item.variations.all %}
+				{% for item in cart_item.variations.all %}
+				{{ item.variation_category | capfirst }}  :{{ item.variation_value | capfirst }}<br>
+				{% endfor %}
+				{% endif %}
+        </p>
+			</figcaption>
+		</figure>
+	</td>
+	   <td>
+           <label for="">
+               {{cart_item.quantity}}
+           </label>
+       </td>
+	<td> 
+		<div class="price-wrap"> 
+			<br>
+			<var class="price">₹{{cart_item.sub_total}}</var> 
+			<small class="text-muted"> {{cart_item.product.price}}</small>  
+		</div> <!-- price-wrap .// -->
+	</td>
+ 
+</tr>
+
+{% endfor %}
+</tbody>
+  
+</table>
+
+
+
+			
+      <button type="submit" name="submit"  class="btn  btn-block" style="color: rgb(255, 255, 255); background-color: rgb(70, 28, 35);"> Place Order </button>
+			<a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
+   </form>
+
+	</div> <!-- card-body.// -->
+
+</div> <!-- card.// -->
+</div>
+
+</aside> <!-- col.// -->
+
+
+</div> <!-- row.// -->
+
+<!-- ============================ COMPONENT 1 END .// ================================= -->
+
+</div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+<script>
+  function a(first_name,last_name,email,phone,address_line_1,address_line_2,city,state,country){
+    document.getElementById('first_name').value =first_name
+    document.getElementById('last_name').value =last_name
+    document.getElementById('email').value =email
+    document.getElementById('phone').value =phone
+    document.getElementById('address_line_1').value =address_line_1
+    document.getElementById('address_line_2').value =address_line_2
+    document.getElementById('city').value =city
+    document.getElementById('state').value =state
+    document.getElementById('country').value =country
+       
+  }
+</script>
+
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+  crossorigin="anonymous"
+></script>
+<script>
+  window.jQuery ||
+    document.write(
+      '<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>'
+    );
+</script>
+<script src="{%static 'checkout/css/popper.min.js'%}"></script>
+<script src="{%static 'checkout/js/bootstrap.min.js'%}"></script>
+<script src="{%static 'checkout/js/holder.min.js'%}"></script>
+<script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function () {
+    "use strict";
+
+    window.addEventListener(
+      "load",
+      function () {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName("needs-validation");
+
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      },
+      false
+    );
+  })();
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+<script>
+  $(document).ready(function () {
+    console.clear();
+    document.getElementById("promo").textContent = "";
+  });
+
+
+
+
+  function couponCheck() {
+    var coupon = $("#coupon").val();
+    var total = $("#apply").val();
+
+    $.ajax({
+      url: "{%url 'checkCoupon'%}",
+      type: "POST",
+      data: {
+        coupon: coupon,
+        total: total,
+        csrfmiddlewaretoken: "{{csrf_token}}",
+      },
+      dataType: "json",
+      success: function (json) {
+        if (json.flag == 1) {
+          swal("Oops", "Coupon is already used", "error");
+        } else if (json.flag == 0) {
+          swal("Oops", "Coupon is Not Active", "error");
+        } else {
+          swal({
+            title: "Congratulation!",
+            text: "You Got A Coupon!",
+            icon: "success",
+            button: "Aww yess!",
+          });
+          console.log(json.discount_price)
+          document.getElementById("grandtotal").textContent = "Grand Total: Rs." + json.total;
+          document.getElementById("discount").textContent =
+            "-" + "Rs." + json.discount_price;
+          document.getElementById("promo").textContent = $("#coupon").val();
+        }
+      },
+    });
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <!-- <script src="{% static 'assets/js/script.js' %}"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js" > </script>
+    <script src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/additional-methods.js"></script>
+<script>
+ 
+  //ajax call
+  
+  
+  $(document).ready(function (e) {
+    jQuery.validator.addMethod("noSpace", function(value, element) { 
+      return value.indexOf(" ") < 0 && value != ""; 
+    }, "No space please and don't leave it empty");
+
+    $.validator.addMethod("isEmail", function (value, element) {
+            return this.optional(element) || value == value.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i);
+        });
+
+        $("#post-form").validate({
+            rules:{
+             
+                first_name:{
+                      
+                    required:true,
+                    minlength:3,
+                    maxlength:10,
+                    lettersonly: true,
+                    noSpace: true,
+                },
+                last_name:{
+                      
+                    required:true,
+                    minlength:1,
+                    maxlength:10,
+                    lettersonly: true,
+                    noSpace: true,
+                },
+               
+                phone:{
+                  maxlength:10,
+                  minlength:10,
+                  numberonly:true,
+                  required:true,
+                },
+
+                email:{
+                   required:true,
+                   isEmail:true
+                },
+                address_line_1:{
+                    required:true,
+                    minlength:4,
+                },
+                address_line_2:{
+                    required:true,
+                    minlength:4,
+                },
+                city:{
+                      
+                    required:true,
+                    minlength:2,
+                    lettersonly:true,
+                    noSpace:true,
+                },
+                state:{
+                      
+                    required:true,
+                    minlength:2,
+                    lettersonly:true,
+                    noSpace:true,
+                },
+                country:{
+                    required:true,
+                    minlength:2,
+                    lettersonly:true,
+                    noSpace:true,
+                },
+               
+            },
+             
+            
+        })
+  
+    })
+
+</script>
+
+
+{% endblock %} 

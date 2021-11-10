@@ -1,0 +1,153 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="section-content padding-y bg">
+{% include 'includes/alerts.html' %}
+<div class="container">
+	<div class="row">
+	{% include 'includes/user_sidebar.html' %}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Address Book</strong><a href="{% url 'add-address' %}" class="float-right btn btn-sm btn btn-success"><i class="fa fa-plus"></i></a>
+			
+		</header>
+
+    <div class="col-md-9">
+        {% if msg %}
+        <p class="text-success">{{msg}}</p>
+        {% endif %}
+        <form method="POST" enctype="multipart/form-data" id="post-form" style="margin-bottom: 20px; border: 2px solid grey; padding: 30px 20px;">
+            {% csrf_token %}
+              <table class='tab'>
+
+            {{ form.as_table }}  
+            </table>
+
+            <div class="form-group">
+                <div id="image-box" class="image-container"></div>
+           
+               
+
+                <button class="btn btn-outline-info" id="confirm-btn" style="width: 100%; margin-top: 10px;" type="submit">Post</button>
+              </div>   
+        </form>
+    </div>
+</div>
+</main>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <!-- <script src="{% static 'assets/js/script.js' %}"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js" > </script>
+    <script src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/additional-methods.js"></script>
+
+ <script>
+ 
+  //ajax call
+  
+  
+  $(document).ready(function (e) {
+    jQuery.validator.addMethod("noSpace", function(value, element) { 
+      return value.indexOf(" ") < 0 && value != ""; 
+    }, "No space please and don't leave it empty");
+
+    $.validator.addMethod("isEmail", function (value, element) {
+            return this.optional(element) || value == value.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i);
+        });
+
+        $("#post-form").validate({
+            rules:{
+             
+                first_name:{
+                      
+                    required:true,
+                    minlength:3,
+                    maxlength:10,
+                    lettersonly: true,
+                    noSpace: true,
+                },
+                last_name:{
+                      
+                    required:true,
+                    minlength:1,
+                    maxlength:10,
+                    lettersonly: true,
+                    noSpace: true,
+                },
+               
+                phonenumber:{
+                  maxlength:10,
+                  minlength:10,
+                  numberonly:true,
+                  required:true,
+                },
+
+                email:{
+                   required: true,
+                   isEmail: true
+                },
+                address_line_1:{
+                    required:true,
+                    minlength:4,
+                },
+                address_line_2:{
+                    required:true,
+                    minlength:4,
+                },
+                city:{
+                      
+                    required:true,
+                    minlength:2,
+                    
+                    lettersonly: true,
+                    noSpace: true,
+                },
+                state:{
+                      
+                    required:true,
+                    minlength:2,
+                 
+                    lettersonly: true,
+                    noSpace: true,
+                },
+                country:{
+                      
+                    required:true,
+                    minlength:2,
+                    
+                    lettersonly: true,
+                    noSpace: true,
+                },
+               
+            },
+             messages: {
+                first_name: {
+                    alpha: "Please enter letters only"
+                },
+                last_name: {
+                    alpha: "Please enter letters only"
+                },
+                email: {
+                    isEmail: "Please enter a valid email address"
+                },
+                phonenumber: {
+                    number: "Please enter a valid mobile number",
+                    minlength: "Please enter atleast 10 digits",
+                    maxlength: "Please enter only 10 digits",
+                },
+            },
+            
+        })
+  
+    })
+
+</script>
+
+
+
+{% endblock %}

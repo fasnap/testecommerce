@@ -1,0 +1,158 @@
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="{% static 'admin1/img/apple-icon.png' %}">
+  <link rel="icon" type="image/png" href="{% static 'admin1/img/favicon.png' %}">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>
+    Material Dashboard Dark Edition by myGlam
+  </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <!-- CSS Files -->
+  <link href="{% static 'admin1/css/material-dashboard.css' %}" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="{% static 'admin1/demo/demo.css' %}" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+     <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'admin1/img/sidebar-2.jpg' %}">
+      <!--
+        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+
+        Tip 2: you can also add an image using data-image tag
+    -->
+      <div class="logo"><a href="{% url 'dashboard' %}" class="simple-text logo-normal">
+          my Glam
+        </a></div>
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard' %}">
+              <i class="material-icons">dashboard</i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+    
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'product' %}">
+              <i class="material-icons">content_paste</i>
+              <p>Product Management</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'category' %}">
+              <i class="material-icons">category</i>
+              <p>Category Management</p>
+            </a>
+          </li>
+  
+           <li class="nav-item  ">
+            <a class="nav-link" href="{% url 'orderManage' %}">
+              <i class="material-icons">shopping_cart</i>
+              <p>Order Management</p>
+            </a>
+          </li>
+          
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'user_manage' %}">
+              <i class="material-icons">manage_accounts</i>
+              <p>User Management</p>
+            </a>
+          </li>
+           <li class="nav-item ">
+            <a class="nav-link" href="{% url 'variation' %}">
+              <i class="material-icons">inventory_1</i>
+              <p>Product Variation</p>
+            </a>
+          </li>
+             <li class="nav-item ">
+            <a class="nav-link" href="{% url 'coupon_manage' %}">
+              <i class="material-icons">local_offer</i>
+              <p>Coupon management</p>
+            </a>
+          </li> 
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'sales_report' %}">
+              <i class="material-icons">receipt</i>
+              <p>Sales Report</p>
+            </a>
+          </li>
+           <li class="nav-item ">
+            <a class="nav-link" href="{% url 'adminlogout' %}">
+              <i class="material-icons">logout</i>
+              <p>Logout</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <h4 >EDIT COUPON</h4>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+          </button>
+          
+        </div>
+      </nav>
+      <!-- End Navbar --> 
+<main role="main" class="container" style="padding-top: 90px;">
+	  	<div class="row">
+		    <div class="col-md-6" style="height: 50%; margin: auto;">
+				<form method="POST" enctype="multipart/form-data" id="submit-form" style="margin-bottom: 20px; border: 2px solid grey; padding: 30px 20px;">
+					{% csrf_token %}
+                    <div class="form-row d-flex justify-content-center">
+                        <div class="form-group col-md-6">
+                             <label for="imputcode" class="d-flex justify-content-center">Edit Coupon Code</label>
+                            {{form.code}}
+                        </div>
+                    </div>
+                   <div class="form-row d-flex justify-content-center">
+                        <div class="form-group col-md-6">
+                           <label for="inputdiscount" class="d-flex justify-content-center">Edit Discount</label>
+                            {{form.discount}}
+                        </div>
+                    </div> 
+                     <div class="form-row d-flex justify-content-center">
+                        <div class="form-group col-md-6">
+                           <label for="inputdiscount" class="d-flex justify-content-center">Valid from</label>
+                            {{form.valid_from}}
+                        </div>
+                    </div>
+                     <div class="form-row d-flex justify-content-center">
+                        <div class="form-group col-md-6">
+                           <label for="inputdiscount" class="d-flex justify-content-center">Valid To</label>
+                            {{form.valid_to}}
+                        </div>
+                    </div>
+                    <div class="form-row d-flex justify-content-center">
+                        <button style="margin-top: 10px; color: white; border-color: white;"class="btn btn-primary " id="confirm-btn" type="submit">SUBMIT</button> 
+                    </div>
+                </form>
+            </div>
+        </div>
+</main>
+ 
+</body>  
+</html>  
+{% endblock %}

@@ -1,0 +1,77 @@
+
+ {% extends 'base.html' %}
+
+{% load static %}
+
+
+
+{% block content %}
+
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y">
+
+    <!-- ============================ COMPONENT REGISTER   ================================= -->
+    <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
+
+
+        <article class="card-body">
+            <header class="mb-4">
+                <h4 class="card-title">Forgot Password</h4>
+            </header>
+
+            <form method="POST" action="forgotPassOtp" id="submit-form">
+                {% csrf_token %}
+
+
+                <div class="form-group">
+                    <label>Please enter otp.</label>
+                    <input type="tel" class="form-control" placeholder="Enter OTP" name="otp" required>
+                </div> <!-- form-group end.// -->
+
+                <div>
+                    {% for message in messages %}
+                    <h6 style="color: red;">{{ message }}</h6>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"> Confirm OTP </button>
+                </div> <!-- form-group// -->
+
+            </form>
+        </article><!-- card-body.// -->
+    </div> <!-- card .// -->
+    <p class="text-center mt-4">Have an account? <a href="">Log In</a></p>
+    <br><br>
+    <!-- ============================ COMPONENT REGISTER  END.// ================================= -->
+
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+<script>
+    $(document).ready(function () {
+
+        $("#submit-form").validate({
+            rules: {
+                otp: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 6,
+                    number: true
+                },
+            },
+            messages: {
+                otp: {
+                    number: "Please enter a valid mobile number",
+                    minlength: "Please enter atleast 6 digits",
+                    maxlength: "Please enter only 6 digits",
+                },
+            },
+        })
+
+    })
+
+</script>
+
+{% endblock %}

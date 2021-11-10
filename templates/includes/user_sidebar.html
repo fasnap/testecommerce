@@ -1,0 +1,26 @@
+{% block content %}
+{% load static %}
+<style>
+.list-group-item.active{
+	z-index: 2;
+    color: #fff;
+    background-color: #ffeeee;
+    border-color: #e7acac;
+}
+
+</style>
+<aside class="col-md-3">
+		<!--   SIDEBAR   -->
+		<ul class="list-group" >
+			<a class="list-group-item {% if '/' == request.path %}active{% endif %}" href="{% url 'user_dashboard' %}" style="color: rgb(0, 0, 0);" > Dashboard </a>
+			<a class="list-group-item {% if '/my_orders/' in request.path %}active{% endif %}" href="{% url 'my_orders' %}" style="color: rgb(0, 0, 0);"> My Orders </a>
+			<a class="list-group-item {% if '/edit_profile/' in request.path %}active{% endif %}" href="{% url 'edit_profile' %}" style="color: rgb(0, 0, 0);"> Edit Profile </a>
+			<a class="list-group-item {% if '/address_book/' in request.path %}active{% endif %}" href="{% url 'address_book' %}" style="color: rgb(0, 0, 0);"> Address book </a>
+			<a class="list-group-item {% if '/my_wishlist/' in request.path %}active{% endif %}" href="{% url 'my_wishlist' %}" style="color: rgb(0, 0, 0);">My Wishlist </a>
+			<a class="list-group-item {% if '/change_password/' in request.path %}active{% endif %}" href="{% url 'change_password' %}" style="color: rgb(0, 0, 0);">Change Password </a>
+		</ul>
+		<br>
+		<a class="btn btn-light btn-block" href="{% url 'logout' %}"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a> 
+		<!--   SIDEBAR .//END   -->
+	</aside>
+	{% endblock %}
