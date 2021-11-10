@@ -74,15 +74,6 @@ def dashboard(request):
     user_count=Account.objects.count()
     product_count=Product.objects.count()
     cat_count=Category.objects.count()
-    product_date = Product.objects.order_by('-id')[1]
-    p_date = product_date.modified_date.date()
-    p_day = product_date.modified_date.strftime("%A")
-    category_date = Category.objects.order_by('-id')[1]
-    c_date =  category_date.modified_date.date()
-    c_day =  category_date.modified_date.strftime("%A")
-    user_date = Account.objects.get(email=request.user)
-    u_date =  user_date.last_login.date
-    u_day =user_date.last_login.strftime("%A")
     products=Product.objects.all().filter(is_available=True).order_by('-price')[:3]
     categories=Category.objects.all()
     context={
@@ -96,12 +87,6 @@ def dashboard(request):
         'cat_count':cat_count,
         'product_count':product_count,
         'user_count':user_count,
-        'p_date':p_date,
-        'p_day':p_day,
-        'c_date':c_date,
-        'c_day':c_day,
-        'u_date':u_date,
-        'u_day':u_day
     }
     return render(request,'admin/dashboard.html',context)
 
